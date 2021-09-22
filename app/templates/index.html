@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="https://img.icons8.com/fluency/48/000000/covid-19.png" type="image/x-icon">  
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"
+integrity="sha512-Wt1bJGtlnMtGP0dqNFH1xlkLBNpEodaiQ8ZN5JLA5wpc1sUlk/O5uuOMNgvzddzkpvZ9GLyYNa8w2s7rqiTk5Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+
+</style>
+</head>
+<body style="font-family:Verdana;color:#aaaaaa;">
+
+<div class="title">
+  <h1>API : Données hospitalières relatives à l'épidémie de COVID-19 en France</h1>
+</div>
+
+<div style="overflow:auto">
+    <div class="left">
+        <h2>Request :</h2>
+        <p>Région : {{ region_min }}</p>
+        <p>Départements : {{ nom_dep_min }}</p>
+        <p>Date : {{ date }}</p>
+        <p>Sexe : {{ sex }}</p>
+      </div>
+
+  <div class="main">
+    <h2>Change request :</h2>
+    <p>
+    {% block content %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+          {{ form.year.label }}<br>
+          {{ form.year }}
+        </p>
+        <p>
+          {{ form.sexe.label }}<br>
+          {{ form.sexe }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {% endblock %}
+    </p>
+  </div>
+
+  <div class="right">
+    <h2>tot_death : </h2>
+    <p>{{ tot_death }}</p>
+    <h2>tot_out : </h2>
+    <p>{{ tot_out }}</p>
+  </div>
+</div>
+
+<div class="graph">
+  <h2>graph</h2>
+  <p>{{ test }}</p>
+  <canvas id="lineChart" width="450" height="200"></canvas>
+  <script>
+    let ctx = document.getElementById("lineChart").getContext("2d");
+    let lineChart = new Chart(ctx, {
+        type: "bar",
+        data : {
+            labels: {{ labels | safe }},
+            datasets: [
+                {
+                    label: "morts",
+                    data: {{values | safe}},
+                    fill :false,
+                    borderColor: "rgb(0, 0, 0)",
+                    backgroundColor: "rgb(255, 0, 0)",
+                    lineTension: 0.1
+                }
+            ]
+        }, options: {
+            responsive: true
+        }
+    })
+  </script>
+
+</div>
+
+{% block footer %}
+<div class="footer">
+  <p>@ Footer</p>
+</div>
+{% endblock %}
+
+</body>
+</html>
+
